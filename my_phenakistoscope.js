@@ -1,49 +1,60 @@
-const SLICE_COUNT = 10;
-
 function setup_pScope(pScope){
   pScope.output_mode(ANIMATED_DISK);
   pScope.scale_for_screen(true);
   pScope.draw_layer_boundaries(false);
-  pScope.set_direction(CCW);
-  pScope.set_slice_count(SLICE_COUNT);
+  pScope.set_direction(CW);
+  pScope.set_slice_count(7);
+ pScope.load_image("flower" , "png");
+ pScope.load_image("car" , "png");
 }
 
 function setup_layers(pScope){
+  new PLayer(null,107, 204, 242); // light blue 
 
-  new PLayer(null, 220);  //lets us draw the whole circle background, ignoring the boundaries
+  let insideBackground = new PLayer(insideGreen);
+  insideBackground.mode(RING);
+  insideBackground.set_boundary(0,400);
 
-  var layer1 = new PLayer(faces);
-  layer1.mode( SWIRL(5) );
-  layer1.set_boundary( 200, 1000 );
+    var CentreImage = new PLayer(flower);
+    CentreImage.mode(RING); 
+    CentreImage.set_boundary( 0, 300 );
 
-  var layer2 = new PLayer(squares);
-  layer2.mode( RING );
-  layer2.set_boundary( 0, 400 );
+    var layer2 = new PLayer(car);
+    layer2.mode( RING );
+    layer2.set_boundary( 0, 400 );
+
+    var layer3 = new PLayer(sun);
+    layer3.mode (RING);
+    layer3.set_boundary(0, 800);
+
 }
 
-function faces(x, y, animation, pScope){
+function flower(x, y, animation, pScope){ 
+  scale(1.4)
+  if(animation.frame ==0)
+
+  {
+  pScope.draw_image("flower",x,y);
+  }
+
+}
+
+function car(x, y, animation, pScope){
+  scale(0.5);  
+ // let angleOffset = (360 / SLICE_COUNT) / 7
+ pScope.draw_image("car",0,-900-animation.wave()*40,20, 20);// creates wave
   
-  scale(animation.frame*2);
-
-  ellipse(0,0,50,50); // draw head
-  fill(30);
-  ellipse(-10,-10,10,10); //draw eye
-  ellipse(10,-10,10,10); // draw eye
-  arc(0,10,20,10,0,180); // draw mouth
-
 }
 
-function squares(x, y, animation, pScope){
+function sun(x,y,animation,pScope){ 
 
-  // this is how you set up a background for a specific layer
-  let angleOffset = (360 / SLICE_COUNT) / 2
-  let backgroundArcStart = 270 - angleOffset;
-  let backgroundArcEnd = 270 + angleOffset;
+  fill(245, 239, 66);
+  let ballSize  = 100 + (animation.wave(1)* 20)
+  let bouce = 20* animation.wave()
+  ellipse(600, 600+bouce ,170); 
+  
+}
 
-  fill(66, 135, 245)
-  arc(x,y,800,800,backgroundArcStart,backgroundArcEnd); // draws "pizza slice" in the background
-
-  fill(255)
-  rect(-10,-300-animation.wave()*50,20,20) // .wave is a cosine wave btw
-
+function insideGreen (x,y,animation,pScope){
+  pScope.fill_background(26, 145, 34);
 }
